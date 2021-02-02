@@ -1,4 +1,4 @@
-package rainbovv.example.domain;
+package rainbovv.example.domain.subscriber;
 
 public class Subscriber {
 
@@ -7,6 +7,8 @@ public class Subscriber {
 	private String name;
 
 	private String email;
+
+	public Subscriber() {}
 
 	public Subscriber(String name, String email) {
 		this.name = name;
