@@ -17,7 +17,7 @@ public class SubscriberController {
 	@GetMapping("/subscribers")
 	public List<Subscriber> subscriberIndex() {
 
-		List<Subscriber> subscribers = sr.getsubscribers();
+		List<Subscriber> subscribers = sr.getSubscribers();
 
 		return subscribers;
 	}

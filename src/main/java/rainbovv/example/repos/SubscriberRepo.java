@@ -14,7 +14,7 @@ public class SubscriberRepo {
 	@Autowired
 	JdbcTemplate jdbcT;
 
-	public List<Subscriber> getsubscribers() {
+	public List<Subscriber> getSubscribers() {
 
 		String selectEmailsQuery = "Select email From public.subscribers;";
 		String selectNamesQuery = "Select name From public.subscribers;";
