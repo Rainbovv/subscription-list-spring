@@ -25,6 +25,21 @@ public class SubscriberRepo {
 									new SubscriberMapper());
 	}
 
+	public List<String> getSubscribersEmailsByIds(List<Integer> ids) {
+
+		StringBuilder id_values = new StringBuilder();
+
+		for (Integer id : ids) {
+			id_values.append(id).append(",");
+		}
+		id_values = new StringBuilder(id_values.substring(0, id_values.length() - 1));
+
+
+
+		return jdbcTemplate.queryForList("SELECT email FROM public.subscribers WHERE id IN ( "+id_values+" );",
+				String.class);
+	}
+
 	public void save(Subscriber subscriber) {
 
 		jdbcTemplate.update("INSERT INTO public.subscribers("

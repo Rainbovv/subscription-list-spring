@@ -6,7 +6,7 @@ import rainbovv.example.domain.subscriber.Subscriber;
 import rainbovv.example.repos.SubscriberRepo;
 import java.util.List;
 
-
+@RestController
 public class SubscriberController {
 
 	@Autowired
