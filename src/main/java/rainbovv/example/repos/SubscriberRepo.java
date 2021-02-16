@@ -13,6 +13,7 @@ public class SubscriberRepo {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
+
 	public Subscriber getSubscriber(int id) {
 
 		return jdbcTemplate.query("SELECT * FROM public.subscribers \n WHERE id =" + id+';',
