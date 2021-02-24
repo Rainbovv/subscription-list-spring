@@ -3,6 +3,8 @@ package rainbovv.example.repos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import rainbovv.example.domain.message.Message;
+import rainbovv.example.domain.message.MessageMapper;
 import rainbovv.example.domain.subscriber.Subscriber;
 import rainbovv.example.domain.subscriber.SubscriberMapper;
 import java.util.List;
@@ -12,6 +14,15 @@ public class SubscriberRepo {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+
+	public Subscriber getSubscriberById(int id) {
+
+		String sql = String.format("SELECT * FROM public.subscribers%n"
+				+ "WHERE id = %d", id);
+
+		return jdbcTemplate.queryForObject(sql, new SubscriberMapper());
+	}
 
 	public Subscriber getSubscriber(int id) {
 
