@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import rainbovv.example.domain.exceptions.NothingToSendException;
 import rainbovv.example.domain.message.Message;
 import rainbovv.example.domain.message.MessageMapper;
 import rainbovv.example.domain.subscriber.Subscriber;
@@ -43,7 +44,7 @@ public class MessageRepo {
                                     new MessageMapper());
     }
 
-    public Map<Subscriber, Message> getNextUnsentMessage() {
+    public Map<Subscriber, Message> getNextUnsentMessage() throws NothingToSendException {
 
         Map<Subscriber, Message> tuple = new HashMap<>();
 
@@ -52,7 +53,9 @@ public class MessageRepo {
 
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(sql);
 
-        resultSet.first();
+        if (!resultSet.first()) {
+            throw new NothingToSendException();
+        }
 
         Message message = getMessageById(resultSet.getInt("message_id"));
         Subscriber subscriber = subscriberRepo.getSubscriberById(resultSet.getInt("subscriber_id"));
