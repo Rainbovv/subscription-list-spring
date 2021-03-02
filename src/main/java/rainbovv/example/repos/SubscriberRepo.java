@@ -24,6 +24,7 @@ public class SubscriberRepo {
 		return jdbcTemplate.queryForObject(sql, new SubscriberMapper());
 	}
 
+
 	public Subscriber getSubscriber(int id) {
 
 		return jdbcTemplate.query("SELECT * FROM public.subscribers \n WHERE id =" + id+';',

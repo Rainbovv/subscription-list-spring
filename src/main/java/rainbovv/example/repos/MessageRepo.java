@@ -16,8 +16,17 @@ import java.util.Map;
 @Repository
 public class MessageRepo {
 
+
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    public void updateMessageContent(int id, String content) {
+
+        String sql = String.format("UPDATE public.message%n" +
+                                    "SET content='%s'%n" +
+                                    "WHERE id=%d", content, id);
+        jdbcTemplate.update(sql);
+    }
 
     @Autowired
     SubscriberRepo subscriberRepo;
@@ -36,6 +45,14 @@ public class MessageRepo {
                                 + "WHERE id = %d", id);
 
         return jdbcTemplate.queryForObject(sql, new MessageMapper());
+    }
+
+    public int getMessageIdByContent(String content) {
+
+        String sql = String.format("SELECT id FROM public.messages%n" +
+                "WHERE content='%s';", content);
+
+        return jdbcTemplate.queryForList(sql, Integer.class).get(0);
     }
 
     public List<Message> getMessages() {

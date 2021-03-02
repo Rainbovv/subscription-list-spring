@@ -18,6 +18,7 @@ public class SubscriberController {
 		return subscriberRepo.getSubscribers();
 	}
 
+
 	@PostMapping("/subscribers/add")
 	public String subscriberAdd(@RequestParam String email,
 	                            @RequestParam String name ) {
