@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import rainbovv.example.domain.message.Message;
-import rainbovv.example.repos.MessageSubscriberIDRepo;
 import rainbovv.example.repos.MessageRepo;
+import rainbovv.example.repos.MessageSubscriberRepo;
 import rainbovv.example.repos.SubscriberRepo;
 
 import java.util.List;
@@ -20,22 +20,23 @@ public class AdminController {
 	@Autowired
 	MessageRepo messageRepo;
 	@Autowired
-	MessageSubscriberIDRepo idRepo;
+	MessageSubscriberRepo messageSubscriberRepo;
 
-	@PostMapping("/admin/subscribers")
-	public String adminSubscriberIndex(@RequestParam String message,
-			Model model) {
+//	@PostMapping("/admin/subscribers")
+//	public String adminSubscriberIndex(@RequestParam String message,
+//			Model model) {
+//
+//		if ( message.contains("'"))
+//			message = message.replace("'", "''");
+//
+//		messageRepo.saveMessage(new Message(message));
+//		int messageId = messageRepo.getMessageIdByContent(message);
+//
+//		model.addAttribute("subscribers", subscriberRepo.getSubscribers());
+//
+//		return "admin/subscribers";
+//	}
 
-		if ( message.contains("'"))
-			message = message.replace("'", "''");
-
-		messageRepo.saveMessage(new Message(message));
-		int messageId = messageRepo.getMessageIdByContent(message);
-
-		model.addAttribute("subscribers", subscriberRepo.getSubscribers());
-
-		return "admin/subscribers";
-	}
 	@PostMapping("/admin/subscribers/compose")
 	public String adminSubscriberCompose(@RequestParam List<Integer> subscribers,
 										 @RequestParam String message) {
@@ -46,7 +47,7 @@ public class AdminController {
 		messageRepo.saveMessage(new Message(message));
 		int messageId = messageRepo.getMessageIdByContent(message);
 
-		subscribers.forEach(i -> idRepo.adIds(i,messageId));
+		subscribers.forEach(i -> messageSubscriberRepo.addNewRow(i,messageId));
 
 		List<String> emails = subscriberRepo.getSubscribersEmailsByIds(subscribers);
 		return "admin/compose";

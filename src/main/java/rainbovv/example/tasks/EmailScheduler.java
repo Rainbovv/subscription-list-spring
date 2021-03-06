@@ -8,32 +8,33 @@ import org.springframework.stereotype.Component;
 import rainbovv.example.domain.exceptions.NothingToSendException;
 import rainbovv.example.domain.message.Message;
 import rainbovv.example.domain.subscriber.Subscriber;
-import rainbovv.example.repos.MessageRepo;
+import rainbovv.example.repos.MessageSubscriberRepo;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class EmailScheduler {
 
 	@Autowired
-	MessageRepo messageRepo;
+	MessageSubscriberRepo messageSubscriberRepo;
 	@Autowired
 	JavaMailSender javaMailSender;
 
-	@Scheduled(initialDelay = 10000, fixedRate = 60000)
+	@Scheduled(initialDelay = 1000, fixedRate = 10000)
 	public void sendEmail() {
 
 		System.err.println("Preparing to send email!");
-		Map<Subscriber, Message> tuple;
+		Map<Message, Set<Subscriber>> tuple;
 		try {
-			tuple = messageRepo.getNextUnsentMessage();
-			Iterator<Message> messageIterator = tuple.values().iterator();
-			Message message;
+			Subscriber subscriber;
+			tuple = messageSubscriberRepo.getUnsentMessages();
 			SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
-			for (Subscriber subscriber : tuple.keySet()) {
-				message = messageIterator.next();
+			for (Message message : tuple.keySet()) {
+				Iterator<Subscriber> subscriberIterator = tuple.get(message).iterator();
+				subscriber = subscriberIterator.next();
 
 				simpleMailMessage.setFrom("Admin");
 				simpleMailMessage.setTo(subscriber.getEmail());
@@ -42,7 +43,7 @@ public class EmailScheduler {
 
 				System.out.println(simpleMailMessage.toString());
 //				javaMailSender.send(simpleMailMessage);
-				messageRepo.setMessageAsSent(message.getId());
+				messageSubscriberRepo.setMessageAsSent(message.getId());
 			}
 
 		} catch (NothingToSendException e) {

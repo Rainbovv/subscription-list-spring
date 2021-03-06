@@ -28,9 +28,6 @@ public class MessageRepo {
         jdbcTemplate.update(sql);
     }
 
-    @Autowired
-    SubscriberRepo subscriberRepo;
-
     public void saveMessage(Message message) {
 
         String sql = String.format("INSERT INTO public.messages("
@@ -59,27 +56,6 @@ public class MessageRepo {
 
         return jdbcTemplate.query("SELECT * FROM public.messages",
                                     new MessageMapper());
-    }
-
-    public Map<Subscriber, Message> getNextUnsentMessage() throws NothingToSendException {
-
-        Map<Subscriber, Message> tuple = new HashMap<>();
-
-        String sql = "SELECT subscriber_id, message_id FROM public.message_subscriber"
-                + "\nWHERE sent = false LIMIT 1 OFFSET 0;";
-
-        SqlRowSet resultSet = jdbcTemplate.queryForRowSet(sql);
-
-        if (!resultSet.first()) {
-            throw new NothingToSendException();
-        }
-
-        Message message = getMessageById(resultSet.getInt("message_id"));
-        Subscriber subscriber = subscriberRepo.getSubscriberById(resultSet.getInt("subscriber_id"));
-
-        tuple.put(subscriber, message);
-
-        return tuple;
     }
 
     public void setMessageAsSent(int messageId) {
